@@ -4,7 +4,8 @@ using namespace sr;
 
 
 int main() {
-    auto p3 = Point3i(1, 2, 3);
-    auto v3 = Vector3i(4,5,6);
+    auto o = Point3i(0, 0, 0);
+    auto p = Point3f(3, 0, 4);
+    std::cout << Distance(Point3f(o), p);
     return 0;
 }

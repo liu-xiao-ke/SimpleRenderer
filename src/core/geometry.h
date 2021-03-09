@@ -388,7 +388,7 @@ namespace sr {
     inline Float Distance(const Point3<T>& p1, const Point3<T>& p2){
         return (p2 - p1).Length();
     }
-    
+
     template<typename T>
     inline Float DistanceSquared(const Point3<T>& p1, const Point3<T>& p2){
         return (p2 - p1).LengthSquared();
