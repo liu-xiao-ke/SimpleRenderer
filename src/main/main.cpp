@@ -4,8 +4,7 @@ using namespace sr;
 
 
 int main() {
-    auto o = Point3i(0, 0, 0);
-    auto p = Point3f(3, 0, 4);
-    std::cout << Distance(Point3f(o), p);
+    Ray r(Point3f(0, 0, 0), Vector3f(1, 2, 3));
+    std::cout << r(1.7);
     return 0;
 }
