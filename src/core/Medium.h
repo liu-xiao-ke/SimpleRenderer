@@ -10,7 +10,6 @@ namespace sr{
     class Medium {
 
     };
-
 }
 
 

@@ -4,7 +4,8 @@ using namespace sr;
 
 
 int main() {
-    Ray r(Point3f(0, 0, 0), Vector3f(1, 2, 3));
-    std::cout << r(1.7);
+    Bounds3f b(Point3f(0, 0, 0), Point3f(3, 4, 5));
+
+    std::cout << b.MaximumExtent();
     return 0;
 }

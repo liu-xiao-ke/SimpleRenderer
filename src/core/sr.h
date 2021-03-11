@@ -45,6 +45,14 @@ namespace sr {
 
     class Medium;
 
+    template<typename T>
+    class Bounds2;
+
+    template<typename T>
+    class Bounds3;
+
+//functions
+    Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }
 }
 
 #endif //SIMPLERENDERER_SR_H
