@@ -4,8 +4,9 @@ using namespace sr;
 
 
 int main() {
-    Bounds3f b(Point3f(0, 0, 0), Point3f(3, 4, 5));
-
-    std::cout << b.MaximumExtent();
+    Bounds3i b(Point3i(0, 0, 0), Point3i(2, 2, 2));
+    for(auto p : b){
+        std::cout << p;
+    }
     return 0;
 }

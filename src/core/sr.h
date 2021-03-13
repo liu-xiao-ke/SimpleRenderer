@@ -51,8 +51,10 @@ namespace sr {
     template<typename T>
     class Bounds3;
 
+    class Bounds2iIterator;
+
 //functions
-    Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }
+    inline Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }
 }
 
 #endif //SIMPLERENDERER_SR_H

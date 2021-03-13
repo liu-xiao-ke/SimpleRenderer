@@ -5,6 +5,9 @@
 #ifndef SIMPLERENDERER_GEOMETRY_H
 #define SIMPLERENDERER_GEOMETRY_H
 
+
+#include <iterator>
+
 #include "sr.h"
 
 namespace sr {
@@ -80,6 +83,14 @@ namespace sr {
             x *= inv;
             y *= inv;
             return *this;
+        }
+
+        bool operator==(const Vector2<T> &v) const {
+            return x == v.x && y == v.y;
+        }
+
+        bool operator!=(const Vector2<T> &v) const {
+            return x != v.x || y != v.y;
         }
 
         Float LengthSquared() const { return x * x + y * y; }
@@ -231,6 +242,16 @@ namespace sr {
             return *this;
         }
 
+
+        bool operator==(const Vector3<T> &v) const {
+            return x == v.x && y == v.y && z == v.z;
+        }
+
+        bool operator!=(const Vector3<T> &v) const {
+            return x != v.x || y != v.y || z != v.z;
+        }
+
+
         Float LengthSquared() const {
             return x * x + y * y + z * z;
         }
@@ -373,6 +394,14 @@ namespace sr {
             return *this;
         }
 
+        bool operator==(const Point2<T> &p) const {
+            return x == p.x && y == p.y;
+        }
+
+        bool operator!=(const Point2<T> &p) const {
+            return x != p.x || y != p.y;
+        }
+
 
     };
 
@@ -418,13 +447,20 @@ namespace sr {
             return Point3<T>(x - v.x, y - v.y, z - v.z);
         }
 
-        Point3<T> operator-=(const Vector3<T>& v){
+        Point3<T> operator-=(const Vector3<T> &v) {
             x -= v.x;
             y -= v.y;
             z -= v.z;
             return *this;
         }
 
+        bool operator==(const Point3<T> &p) const {
+            return x == p.x && y == p.y && z == p.z;
+        }
+
+        bool operator!=(const Point3<T> &p) const {
+            return x != p.x || y != p.y || z != p.z;
+        }
     };
 
 /************************************************Point typedef*********************************************************/
@@ -457,13 +493,13 @@ namespace sr {
     }
 
     template<typename T>
-    inline Point2<T> Lerp(Float t, const Point2<T> &p0, const Point2<T> &p1) {
-        return Point2<T>(sr::Lerp(t, p0.x, p1.x), sr::Lerp(t, p0.y, p1.y));
+    Point2<T> Lerp(Float t, const Point2<T> &p0, const Point2<T> &p1) {
+        return (1 - t) * p0 + p1;
     }
 
     template<typename T>
-    inline Point3<T> Lerp(Float t, const Point3<T> &p0, const Point3<T> &p1) {
-        return Point3<T>(sr::Lerp(t, p0.x, p1.x), sr::Lerp(t, p0.y, p1.y), sr::Lerp(t, p0.z, p1.z));
+    Point3<T> Lerp(Float t, const Point3<T> &p0, const Point3<T> &p1) {
+        return (1 - t) * p0 + p1;
     }
 
     template<typename T>
@@ -616,6 +652,14 @@ namespace sr {
             y *= inv;
             z *= inv;
             return *this;
+        }
+
+        bool operator==(const Normal3<T> &n) const {
+            return x == n.x && y == n.y && z == n.z;
+        }
+
+        bool operator!=(const Normal3<T> &n) const {
+            return x != n.x || y != n.y || z != n.z;
         }
 
         Float LengthSquared() const {
@@ -779,21 +823,28 @@ namespace sr {
             return Point2<T>(sr::Lerp(t.x, pMin.x, pMax.x), sr::Lerp(t.y, pMin.y, pMax.y));
         }
 
-        Vector2<T> Offset(const Point2<T>& p) const{
+        Vector2<T> Offset(const Point2<T> &p) const {
             auto d = p - pMin;
-            if(pMax.x > pMin.x) d.x /= pMax.x - pMin.x;
-            if(pMax.y > pMin.y) d.y /= pMax.y - pMin.y;
+            if (pMax.x > pMin.x) d.x /= pMax.x - pMin.x;
+            if (pMax.y > pMin.y) d.y /= pMax.y - pMin.y;
             return d;
         }
 
-        void BoundingSphere(Point2<T>* center, Float *radius) const{
+        void BoundingSphere(Point2<T> *center, Float *radius) const {
             *center = (pMin + pMax) / 2;
             *radius = Inside(*this, *center) ? Distance(*center, *pMax) : 0;
         }
 
-        //todo
-        //bounds2<T> iterator
+        bool operator==(const Bounds2<T> &b) const {
+            return pMin == b.pMin && pMax == b.pMax;
+        }
+
+        bool operator!=(const Bounds2<T> &b) const {
+            return pMin != b.pMin || pMax != b.pMax;
+        }
+
     };
+
 
     template<typename T>
     class Bounds3 {
@@ -849,16 +900,25 @@ namespace sr {
 
         Vector3<T> Offset(const Point3<T> &p) const {
             auto d = p - pMin;
-            if(pMax.x > pMin.x) d.x /= pMax.x - pMin.x;
-            if(pMax.y > pMin.y) d.y /= pMax.y - pMin.y;
-            if(pMax.z > pMin.z) d.z /= pMax.z - pMin.z;
+            if (pMax.x > pMin.x) d.x /= pMax.x - pMin.x;
+            if (pMax.y > pMin.y) d.y /= pMax.y - pMin.y;
+            if (pMax.z > pMin.z) d.z /= pMax.z - pMin.z;
             return d;
         }
 
-        void BoundingSphere(Point3<T>* center, Float *radius) const{
+        void BoundingSphere(Point3<T> *center, Float *radius) const {
             *center = (pMin + pMax) / 2;
             *radius = Inside(*this, *center) ? Distance(*center, *pMax) : 0;
         }
+
+        bool operator==(const Bounds3<T> &b) const {
+            return pMin == b.pMin && pMax == b.pMax;
+        }
+
+        bool operator!=(const Bounds3<T> &b) const {
+            return pMin != b.pMin || pMax != b.pMax;
+        }
+
 
         //todo
         //Bounds3<T> Iterator
@@ -952,6 +1012,123 @@ namespace sr {
         return Bounds3<T>(b.pMin - Point3<T>(delta, delta, delta), b.pMax + Point3<T>(delta, delta, delta));
     }
 
+    template<typename T>
+    inline bool isCollapse(const Bounds2<T> &b) {
+        return b.pMin.x >= b.pMax.x || b.pMin.y >= b.pMax.y;
+    }
 
+    template<typename T>
+    inline bool isCollapse(const Bounds3<T> &b) {
+        return b.pMin.x >= b.pMax.x || b.pMin.y >= b.pMax.y || b.pMin.z >= b.pMax.z;
+    }
+
+/*******************************************Bounds Iterator************************************************************/
+
+    //To fullfill the foreach function, you need to achieve the iterator
+    class Bounds2iIterator : public std::forward_iterator_tag {
+    public:
+        Bounds2iIterator(const Bounds2i &b, const Point2i &p) : p(p), bounds(&b) {}
+
+        Bounds2iIterator operator++() {
+            advance();
+            return *this;
+        }
+
+        Bounds2iIterator operator++(int) {
+            Bounds2iIterator old = *this;
+            advance();
+            return old;
+        }
+
+        bool operator==(Bounds2iIterator &bi) const {
+            return p == bi.p && bounds == bi.bounds;
+        }
+
+        bool operator!=(Bounds2iIterator &bi) const {
+            return p != bi.p || bounds != bi.bounds;
+        }
+
+        Point2i operator*() const { return p; }
+
+    private:
+        Point2i p;
+        const Bounds2i *bounds;
+
+        void advance() {
+            p.x++;
+            if (p.x == bounds->pMax.x) {
+                p.x = bounds->pMin.x;
+                p.y++;
+            }
+        }
+    };
+
+    class Bounds3iIterator : public std::forward_iterator_tag {
+    public:
+        Bounds3iIterator(const Bounds3i &b, const Point3i p) : p(p), bounds(&b) {}
+
+        Bounds3iIterator operator++() {
+            advance();
+            return *this;
+        }
+
+        Bounds3iIterator operator++(int) {
+            auto old = *this;
+            advance();
+            return old;
+        }
+
+        bool operator==(const Bounds3iIterator &bi) const {
+            return p == bi.p && bounds == bi.bounds;
+        }
+
+        bool operator!=(const Bounds3iIterator &bi) const {
+            return p != bi.p || bounds != bi.bounds;
+        }
+
+        Point3i operator*() const { return p; }
+
+    private:
+        Point3i p;
+        const Bounds3i *bounds;
+
+        void advance() {
+            p.x++;
+            if (p.x == bounds->pMax.x) {
+                p.x = bounds->pMin.x;
+                p.y++;
+                if (p.y == bounds->pMax.y) {
+                    p.y = bounds->pMin.y;
+                    p.z++;
+                }
+            }
+        }
+    };
+
+/****************************************************bounds iterator function******************************************/
+
+    //fullfill the begin function
+    inline Bounds2iIterator begin(const Bounds2i &b) {
+        return Bounds2iIterator(b, b.pMin);
+    }
+
+    inline Bounds2iIterator end(const Bounds2i &b) {
+        Point2i pEnd(b.pMin.x, b.pMax.y);
+        //if the bound degenerate, the foreach need to jump out the lool immediately
+        if (isCollapse(b)) pEnd = b.pMin;
+        return Bounds2iIterator(b, pEnd);
+    }
+
+    inline Bounds3iIterator begin(const Bounds3i &b) {
+        return Bounds3iIterator(b, b.pMin);
+    }
+
+    inline Bounds3iIterator end(const Bounds3i &b) {
+        Point3i pEnd(b.pMin.x, b.pMin.y, b.pMax.z);
+        if (isCollapse(b)) {
+            pEnd = b.pMin;
+        }
+        return Bounds3iIterator(b, pEnd);
+    }
 }
 #endif //SIMPLERENDERER_GEOMETRY_H
