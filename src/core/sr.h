@@ -11,6 +11,8 @@
 #include <cfloat>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <cstring>
 
 namespace sr {
 
@@ -53,8 +55,29 @@ namespace sr {
 
     class Bounds2iIterator;
 
-//functions
+    class Matrix4x4;
+    //functions
+    //Lerp of two values
     inline Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }
+
+    //solve quadratic equation: at²+bt+c=0
+    inline bool Quadratic(Float a, Float b, Float c, Float *t0, Float *t1){
+        double discrim = (double) b * b - 4 * (double)a * (double) c;
+        if(discrim < 0) return false;
+        double rootDiscrim = std::sqrt(discrim);
+        double q;
+
+        //a more precision for solving equation
+        //avoid cancellation error
+        //x1 = q / a, x2 = c / q;
+        if(b < 0) q = -0.5 * (b - rootDiscrim);
+        else q = -0.5 * (b + rootDiscrim);
+        *t0 = q / a;
+        *t1 = c / q;
+        if(*t0 > *t1) std::swap(*t0, *t1);
+        return true;
+    }
+
 }
 
 #endif //SIMPLERENDERER_SR_H
