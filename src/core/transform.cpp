@@ -37,6 +37,7 @@ namespace sr{
                 }
             }
         }
+        return res;
     }
 
     bool Matrix4x4::operator==(const Matrix4x4 &m2) const {
@@ -59,7 +60,7 @@ namespace sr{
 
     std::ostream & operator<<(std::ostream& out, const Matrix4x4& m){
         out << "[ " << m.m[0][0] << " " << m.m[0][1] << " " << m.m[0][2] << " " << m.m[0][3] << " ]\n" <<
-               "[ " << m.m[1][0] << " " << m.m[1][1] << " " << m.m[1][2] << " " << m.m[0][3] << " ]\n" <<
+               "[ " << m.m[1][0] << " " << m.m[1][1] << " " << m.m[1][2] << " " << m.m[1][3] << " ]\n" <<
                "[ " << m.m[2][0] << " " << m.m[2][1] << " " << m.m[2][2] << " " << m.m[2][3] << " ]\n" <<
                "[ " << m.m[3][0] << " " << m.m[3][1] << " " << m.m[3][2] << " " << m.m[3][3] << " ]\n";
         return out;
@@ -72,7 +73,71 @@ namespace sr{
                          m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3]);
     }
 
-    Matrix4x4 Inverse(const Matrix4x4& m){
+    Matrix4x4 Inverse(const Matrix4x4 &m) {
+        int indxc[4], indxr[4];
+        int ipiv[4] = {0, 0, 0, 0};
+        Float minv[4][4];
+        std::memcpy(minv, m.m, 4 * 4 * sizeof(Float));
+        for(int i = 0; i < 4; ++i){
+            int row = 0, col = 0;
+            Float biggest = 0.f;
+            for(int j = 0; j < 4; ++j){
+                if(ipiv[j] != 1){
+                    for(int k = 0; k < 4; ++k){
+                        if (ipiv[k] == 0){
+                            if(minv[j][k] >= biggest){
+                                biggest = minv[j][k];
+                                row = j;
+                                col = k;
+                            }
+                        }
+                        else if (ipiv[k] > 1){
+                            //singular matrix error
+                        }
+                    }
+                }
+            }
+            ipiv[col]++;
+            indxr[i] = row;
+            indxc[i] = col;
+            if(row != col){
+                for(int k = 0; k < 4; ++k) std::swap(minv[row][k], minv[col][k]);
+            }
+            if (minv[col][col] == 0.f){
+                //singular matrix error
+            }
+            Float piv_ratio = 1.0f / minv[col][col];
+            minv[col][col] = 1;
+            for(int k = 0; k < 4; ++k){
+                minv[col][k] *= piv_ratio;
+            }
+            for(int j = 0; j < 4; ++j){
+                if(j == col) continue;
+                Float save = minv[j][col];
+                minv[j][col] = 0;
+                for(int k = 0; k < 4; ++k){
+                    minv[j][k] -= minv[col][k] * save;
+                }
+            }
+        }
+        for(int j = 3; j >= 0; --j){
+            if (indxr[j] == indxc[j]) continue;
+            for(int k = 0; k < 4; ++k){
+                std::swap(minv[k][indxr[j]], minv[k][indxc[j]]);
+            }
+        }
+        return Matrix4x4(minv);
+    }
+
+    Transform::Transform(const Float _m[4][4]) {
+        std::memcpy(m.m, _m, 4 * 4 * sizeof(Float));
+    }
+
+    Transform Transpose(const Transform &t) {
+
+    }
+
+    Transform Inverse(const Transform &t) {
 
     }
 }

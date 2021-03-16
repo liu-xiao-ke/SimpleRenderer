@@ -56,6 +56,9 @@ namespace sr {
     class Bounds2iIterator;
 
     class Matrix4x4;
+
+    class Transform;
+
     //functions
     //Lerp of two values
     inline Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }

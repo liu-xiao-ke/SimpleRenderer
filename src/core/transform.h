@@ -23,5 +23,16 @@ namespace sr{
     std::ostream& operator<<(std::ostream& out, const Matrix4x4& m);
     Matrix4x4 Transpose(const Matrix4x4 & m);
     Matrix4x4 Inverse(const Matrix4x4& m);
+
+    class Transform{
+    public:
+        Transform();
+        Transform(const Float[4][4]);
+        Transform(const Matrix4x4 _m):m(_m), mInv(Inverse(m)){}
+        friend Transform Inverse(const Transform& t);
+        friend Transform Transpose(const Transform& t);
+    private:
+        Matrix4x4 m, mInv;
+    };
 }
 #endif //SIMPLERENDERER_TRANSFORM_H
