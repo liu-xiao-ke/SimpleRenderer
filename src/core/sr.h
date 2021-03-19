@@ -23,11 +23,20 @@ namespace sr {
 #endif
 
 //Global Constants
+    //PIs:
+    static constexpr Float Pi = 3.14159265358979323846;
+    static constexpr Float InvPi = 0.31830988618379067154;
+    static constexpr Float Inv2Pi = 0.15915494309189533577;
+    static constexpr Float Inv4Pi = 0.07957747154594766788;
+    static constexpr Float PiOver2 = 1.57079632679489661923;
+    static constexpr Float PiOver4 = 0.78539816339744830961;
+    static constexpr Float Sqrt2 = 1.41421356237309504880;
+
     static constexpr Float MaxFloat = std::numeric_limits<Float>::max();
     static constexpr Float Infinity = std::numeric_limits<Float>::infinity();
 
 
-// class
+    // class
     template<typename T>
     class Vector2;
 
@@ -81,6 +90,10 @@ namespace sr {
         return true;
     }
 
+    //degree2radians
+    inline Float Radians(Float degree) { return (degree / 180) * Pi; }
+    //radians2degree
+    inline Float Degrees(Float radian){ return radian * InvPi * 180; }
 }
 
 #endif //SIMPLERENDERER_SR_H

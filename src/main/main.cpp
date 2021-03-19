@@ -6,8 +6,7 @@ using namespace sr;
 
 
 int main() {
-    Float m1[4][4] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-    Float m2[4][4] = {1, 2, 3, 4, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
-    std::cout << Matrix4x4::Mul(Inverse(m2), m2);
+    Float m1[4][4] = {1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1};
+    std::cout << Inverse(Matrix4x4(m1));
     return 0;
 }
