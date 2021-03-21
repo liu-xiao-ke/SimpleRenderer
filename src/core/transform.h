@@ -33,6 +33,23 @@ namespace sr{
         Transform(const Matrix4x4& m, const Matrix4x4& minv):m(m), mInv(minv){}
         friend Transform Inverse(const Transform& t);
         friend Transform Transpose(const Transform& t);
+
+        bool HasScale() const;
+        template<typename T>
+        inline Point3<T> operator()(const Point3<T>& p) const;
+
+        template<typename T>
+        inline Vector3<T> operator()(const Vector3<T>& v) const;
+
+        template<typename T>
+        inline Normal3<T> operator()(const Normal3<T>& n) const;
+
+        inline Ray operator()(const Ray& r) const;
+
+        template<typename T>
+        inline Bounds3<T> operator()(const Bounds3<T>& b) const;
+
+        Transform operator*(const Transform& t2) const;
     private:
         Matrix4x4 m, mInv;
     };

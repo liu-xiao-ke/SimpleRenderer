@@ -33,6 +33,7 @@ namespace sr {
     static constexpr Float Sqrt2 = 1.41421356237309504880;
 
     static constexpr Float MaxFloat = std::numeric_limits<Float>::max();
+    static constexpr Float MinFloat = std::numeric_limits<Float>::min();
     static constexpr Float Infinity = std::numeric_limits<Float>::infinity();
 
 
