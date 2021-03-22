@@ -22,6 +22,4 @@ A simple renderer based on pbrt design.
 
 - [ ] Animating Transformations
 
-- [ ] 
-
   

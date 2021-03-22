@@ -57,6 +57,8 @@ namespace sr {
 
     class Medium;
 
+    class MediumInterface;
+
     template<typename T>
     class Bounds2;
 
@@ -68,6 +70,7 @@ namespace sr {
     class Matrix4x4;
 
     class Transform;
+
 
     //functions
     //Lerp of two values

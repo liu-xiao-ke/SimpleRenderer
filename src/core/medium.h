@@ -10,6 +10,10 @@ namespace sr{
     class Medium {
 
     };
+
+    class MediumInterface{
+
+    };
 }
 
 

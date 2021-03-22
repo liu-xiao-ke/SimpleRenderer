@@ -580,6 +580,8 @@ namespace sr {
     public:
         T x, y, z;
 
+        Normal3(){}
+
         Normal3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {
             assert(!HasNans());
         }

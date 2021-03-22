@@ -3,4 +3,4 @@ project(SimpleRenderer)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(SimpleRenderer src/main/main.cpp src/core/geometry.h src/core/geometry.cpp src/core/sr.h src/core/Medium.cpp src/core/Medium.h src/core/transform.cpp src/core/transform.h)
+add_executable(SimpleRenderer src/main/main.cpp src/core/geometry.h src/core/geometry.cpp src/core/sr.h src/core/medium.cpp src/core/medium.h src/core/transform.cpp src/core/transform.h src/core/interaction.h src/core/interaction.cpp src/core/shape.h)
