@@ -18,4 +18,10 @@ A simple renderer based on pbrt design.
 
 - [x] Transformation
 
+- [x] Applying Transformation
+
+- [ ] Animating Transformations
+
+- [ ] 
+
   

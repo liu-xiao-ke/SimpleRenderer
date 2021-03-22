@@ -50,6 +50,8 @@ namespace sr{
         inline Bounds3<T> operator()(const Bounds3<T>& b) const;
 
         Transform operator*(const Transform& t2) const;
+
+        bool SwapsHandedness() const;
     private:
         Matrix4x4 m, mInv;
     };
