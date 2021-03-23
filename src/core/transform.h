@@ -8,6 +8,7 @@
 #include "sr.h"
 #include "geometry.h"
 
+
 namespace sr{
     class Matrix4x4{
     public:
@@ -48,6 +49,8 @@ namespace sr{
 
         template<typename T>
         inline Bounds3<T> operator()(const Bounds3<T>& b) const;
+
+        inline SurfaceInteraction operator()(const SurfaceInteraction& si) const;
 
         Transform operator*(const Transform& t2) const;
 

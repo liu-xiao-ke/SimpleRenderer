@@ -71,7 +71,9 @@ namespace sr {
 
     class Transform;
 
+    class Interaction;
 
+    class SurfaceInteraction;
     //functions
     //Lerp of two values
     inline Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }

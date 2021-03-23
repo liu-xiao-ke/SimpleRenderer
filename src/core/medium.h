@@ -12,7 +12,10 @@ namespace sr{
     };
 
     class MediumInterface{
-
+    public:
+        MediumInterface(): outside(nullptr), inside(nullptr){}
+        MediumInterface(const Medium* medium): outside(medium), inside(medium){}
+        const Medium *outside, *inside;
     };
 }
 

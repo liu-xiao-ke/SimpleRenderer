@@ -2,6 +2,7 @@
 // Created by 18310 on 2021/3/14.
 //
 #include "transform.h"
+#include "interaction.h"
 
 namespace sr{
     Matrix4x4::Matrix4x4(Float _m[4][4]) {
@@ -148,7 +149,7 @@ namespace sr{
         Float lc2 = (*this)(Vector3f(0, 0, 1)).LengthSquared();
 #define NOT_ONE(X)((X) < 0.999f || (X) > 1.001f)
         return NOT_ONE(la2) || NOT_ONE(lb2) || NOT_ONE(lc2);
-#undef
+#undef NOT_ONE
     }
 
     Transform Translate(const Vector3f &delta) {
@@ -303,6 +304,30 @@ namespace sr{
             pMax = Max(pMax, temp_point);
         }
         return Bounds3<T>(pMin, pMax);
+    }
+
+    SurfaceInteraction Transform::operator()(const SurfaceInteraction &si) const {
+        SurfaceInteraction res;
+        const Transform & M = *this;
+        res.p = M(si.p);
+        res.pError = M(si.pError);
+        res.uv = si.uv;
+        res.dpdu = M(si.dpdu);
+        res.dpdv = M(si.dpdv);
+        res.n = Normalize(M(si.n));
+        res.dndu = M(si.dndu);
+        res.dndv = M(si.dndv);
+        res.wo = Normalize(M(si.wo));
+        res.time = si.time;
+        res.mediumInterface = si.mediumInterface;
+
+        res.shading.n = Normalize(M(si.shading.n));
+        res.shading.dpdu = M(si.shading.dpdu);
+        res.shading.dpdv = M(si.shading.dpdv);
+        res.shading.dndu = M(si.shading.dndu);
+        res.shading.dndv = M(si.shading.dndv);
+
+        return res;
     }
 
     Transform Transform::operator*(const Transform &t2) const {

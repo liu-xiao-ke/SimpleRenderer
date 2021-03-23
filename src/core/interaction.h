@@ -10,10 +10,11 @@
 #include "medium.h"
 #include "shape.h"
 
+
 namespace sr {
     class Interaction {
     public:
-        Interaction();
+        Interaction() { }
 
         Interaction(const Point3f &p, const Normal3f &n, const Vector3f &pError, const Vector3f &wo, Float time,
                     const MediumInterface &mediumInterface) :
@@ -31,13 +32,26 @@ namespace sr {
         MediumInterface mediumInterface;
     };
 
-    class SurfaceInteraction : public Interaction{
+    class SurfaceInteraction : public Interaction {
     public:
-
         Point2f uv;
         Vector3f dpdu, dpdv;
         Normal3f dndu, dndv;
-        const Shape* shape = nullptr;
+        const Shape *shape = nullptr;
+
+        SurfaceInteraction(){}
+        SurfaceInteraction(const Point3f &p, const Vector3f &pError, const Vector3f &wo, Float time, const Point2f &uv,
+                           const Vector3f &dpdu, const Vector3f &dpdv, const Normal3f &dndu, const Normal3f &dndv,
+                           const Shape *shape);
+
+        //a relatively small perturbation of the geometric normal structure named shading:
+        struct {
+            Normal3f n;
+            Vector3f dpdu, dpdv;
+            Normal3f dndu, dndv;
+        } shading;
+
+        void SetShadingGeometry(const Vector3f& dpdus, const Vector3f& dpdvs, const Normal3f& dndus, const Normal3f& dndvs, bool orientationIsAuthoritative);
     };
 }
 #endif //SIMPLERENDERER_INTERACTION_H

@@ -291,7 +291,7 @@ namespace sr {
     }
 
     template<typename T>
-    inline Vector3<T> Normalize(const Vector3<T> &v) {
+    inline Vector3<Float> Normalize(const Vector3<T> &v) {
         return v / v.Length();
     }
 
@@ -454,6 +454,32 @@ namespace sr {
             return *this;
         }
 
+        Point3<T> operator*(Float f) {
+            return Point3<T>(x * f, y * f, z * f);
+        }
+
+        Point3<T> &operator*=(Float f) {
+            x *= f;
+            y *= f;
+            z *= f;
+            return *this;
+        }
+
+        Point3<T> operator/(Float f) {
+            assert(f != 0);
+            Float invf = 1.0 / f;
+            return Point3<T>(x * invf, y * invf, z * invf);
+        }
+
+        Point3<T> &operator/=(Float f) {
+            assert(f != 0);
+            Float invf = 1.0 / f;
+            x *= invf;
+            y *= invf;
+            z *= invf;
+            return *this;
+        }
+
         bool operator==(const Point3<T> &p) const {
             return x == p.x && y == p.y && z == p.z;
         }
@@ -580,7 +606,7 @@ namespace sr {
     public:
         T x, y, z;
 
-        Normal3(){}
+        Normal3() = default;
 
         Normal3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {
             assert(!HasNans());
