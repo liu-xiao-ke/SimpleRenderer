@@ -428,6 +428,16 @@ namespace sr {
             return std::isnan(x) || std::isnan(y) || std::isnan(z);
         }
 
+        T operator[](std::size_t i) const {
+            assert(i >= 0 && i < 3);
+            return i == 0 ? x : (i == 1 ? y : z);
+        }
+
+        T &operator[](std::size_t i) {
+            assert(i >= 0 && i < 3);
+            return i == 0 ? x : (i == 1 ? y : z);
+        }
+
         Point3<T> operator+(const Vector3<T> &v) const {
             return Point3<T>(x + v.x, y + v.y, z + v.z);
         }
@@ -947,9 +957,13 @@ namespace sr {
             return pMin != b.pMin || pMax != b.pMax;
         }
 
+        inline bool IntersectP(const Ray &ray, Float *hitt0, Float *hitt1) const;
+
+        inline bool IntersectP(const Ray &ray, const Vector3f &invDir, const int dirIsNeg[3]) const;
     };
 
-/******************************************************typedef*********************************************************/
+
+    /******************************************************typedef*********************************************************/
 
     typedef Bounds2<int> Bounds2i;
     typedef Bounds2<Float> Bounds2f;

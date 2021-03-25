@@ -17,7 +17,7 @@ namespace sr {
         shading.dndu = dndu;
         shading.dndv = dndv;
 
-        if(shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness)){
+        if (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness)) {
             n = -n;
             shading.n = -shading.n;
         }
@@ -26,12 +26,14 @@ namespace sr {
     void SurfaceInteraction::SetShadingGeometry(const Vector3f &dpdus, const Vector3f &dpdvs, const Normal3f &dndus,
                                                 const Normal3f &dndvs, bool orientationIsAuthoritative) {
         shading.n = Normalize(Normal3f(Cross(dpdus, dpdvs)));
-        if (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness)){
+        if (shape && (shape->reverseOrientation ^ shape->transformSwapsHandedness)) {
             shading.n = -shading.n;
         }
 
         //the shading normal is always at the same hemisphere with surface normal
-        if (orientationIsAuthoritative){
+        //orientationIsAuthoritative is true means the hemisphere is besed on the direction of n
+        //false means the hemisphere is based on the direction of shading.n
+        if (orientationIsAuthoritative) {
             n = FaceForward(n, shading.n);
         } else {
             shading.n = FaceForward(shading.n, n);
