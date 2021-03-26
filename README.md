@@ -22,4 +22,10 @@ A simple renderer based on pbrt design.
 
 - [ ] Animating Transformations
 
-  
+
+
+
+## Chapter3: Shapes
+
+- [x] Shape
+- [ ] Sphere
