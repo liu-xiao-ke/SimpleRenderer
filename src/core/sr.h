@@ -103,6 +103,15 @@ namespace sr {
     inline Float Radians(Float degree) { return (degree / 180) * Pi; }
     //radians2degree
     inline Float Degrees(Float radian){ return radian * InvPi * 180; }
+
+    //clamp between low and high
+    template<typename T, typename U, typename V>
+    inline T Clamp(T val, U lo, V hi){
+        if(val < lo) return lo;
+        else if(val > hi) return hi;
+        else return val;
+    }
+
 }
 
 #endif //SIMPLERENDERER_SR_H

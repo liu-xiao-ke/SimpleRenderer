@@ -9,6 +9,9 @@
 
 namespace sr{
     class Sphere : public Shape {
+    public:
+
+    private:
 
     };
 }
