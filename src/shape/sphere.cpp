@@ -3,3 +3,6 @@
 //
 
 #include "sphere.h"
+namespace sr{
+
+}

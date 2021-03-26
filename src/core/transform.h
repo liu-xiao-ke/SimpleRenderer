@@ -50,7 +50,7 @@ namespace sr{
         template<typename T>
         Bounds3<T> operator()(const Bounds3<T>& b) const;
 
-        inline SurfaceInteraction operator()(const SurfaceInteraction& si) const;
+        SurfaceInteraction operator()(const SurfaceInteraction& si) const;
 
         Transform operator*(const Transform& t2) const;
 
@@ -100,9 +100,10 @@ namespace sr{
     }
 
     //todo
-//    Ray Transform::operator()(const Ray &r) const {
-//
-//    }
+    Ray Transform::operator()(const Ray &r) const {
+
+    }
+
 
 }
 #endif //SIMPLERENDERER_TRANSFORM_H
