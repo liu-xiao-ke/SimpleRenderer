@@ -26,6 +26,7 @@ namespace sr {
     }
 
     //avoid computing the inversion of dir and reduce the comparing times
+    //improve 15% performance
     template<typename T>
     bool Bounds3<T>::IntersectP(const Ray &ray, const Vector3f &invDir, const int *dirIsNeg) const {
         const Bounds3f &bounds = *this;
@@ -35,16 +36,14 @@ namespace sr {
         Float tMiny = (bounds[dirIsNeg[0]].y - ray.o.y) * invDir[1];
         Float tMaxy = (bounds[1 - dirIsNeg[0]].y - ray.o.y) * invDir[1];
 
-        if (tMin > tMaxy || tMiny > tMax)
-            return false;
+        if (tMin > tMaxy || tMiny > tMax) return false;
         if (tMiny > tMin) tMin = tMiny;
         if (tMax > tMaxy) tMax = tMaxy;
 
         Float tMinz = (bounds[dirIsNeg[0]].z - ray.o.z) * invDir[2];
         Float tMaxz = (bounds[1 - dirIsNeg[0]].z - ray.o.z) * invDir[2];
 
-        if (tMin > tMaxz || tMinz > tMax)
-            return false;
+        if (tMin > tMaxz || tMinz > tMax) return false;
         if (tMinz > tMin) tMin = tMinz;
         if (tMaxz < tMax) tMax = tMaxz;
 

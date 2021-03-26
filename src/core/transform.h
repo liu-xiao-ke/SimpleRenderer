@@ -48,7 +48,7 @@ namespace sr{
         inline Ray operator()(const Ray& r) const;
 
         template<typename T>
-        inline Bounds3<T> operator()(const Bounds3<T>& b) const;
+        Bounds3<T> operator()(const Bounds3<T>& b) const;
 
         inline SurfaceInteraction operator()(const SurfaceInteraction& si) const;
 
@@ -68,6 +68,41 @@ namespace sr{
     Transform Rotate(Float theta, const Vector3f& axis);
     //Change from world coordinate to camera coordinate
     Transform LookAt(const Point3f& pos, const Point3f& look, const Vector3f& up);
+
+
+    template<typename T>
+    Point3<T> Transform::operator()(const Point3<T> &p) const {
+        T x = p.x, y = p.y, z = p.z;
+        T _x = m.m[0][0] * x + m.m[0][1] * y + m.m[0][2] * z + m.m[0][3];
+        T _y = m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z + m.m[1][3];
+        T _z = m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z + m.m[2][3];
+        T _w = m.m[3][0] * x + m.m[3][1] * y + m.m[3][2] * z + m.m[3][3];
+        if (_w == 1) return Point3<T>(_x, _y, _z);
+        else return Point3<T>(_x, _y, _z) / _w;
+    }
+
+    template<typename T>
+    Vector3<T> Transform::operator()(const Vector3<T> &v) const {
+        T x = v.x, y = v.y, z = v.z;
+        return Vector3<T>(m.m[0][0] * x + m.m[0][1] * y + m.m[0][2] * z,
+                          m.m[1][0] * x + m.m[1][1] * y + m.m[1][2] * z,
+                          m.m[2][0] * x + m.m[2][1] * y + m.m[2][2] * z);
+    }
+
+
+    template<typename T>
+    Normal3<T> Transform::operator()(const Normal3<T> &n) const {
+        Matrix4x4 nm = Transpose(mInv);
+        T x = n.x, y = n.y, z = n.z;
+        return Normal3<T>(nm.m[0][0] * x + nm.m[0][1] * y + nm.m[0][2] * z,
+                          nm.m[1][0] * x + nm.m[1][1] * y + nm.m[1][2] * z,
+                          nm.m[2][0] * x + nm.m[2][1] * y + nm.m[2][2] * z);
+    }
+
+    //todo
+//    Ray Transform::operator()(const Ray &r) const {
+//
+//    }
 
 }
 #endif //SIMPLERENDERER_TRANSFORM_H
