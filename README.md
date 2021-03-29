@@ -29,3 +29,10 @@ A simple renderer based on pbrt design.
 
 - [x] Shape
 - [ ] Sphere
+- [ ] Cylinders
+- [ ] Disks
+- [ ] Other quadrics
+- [ ] Triangle meshes
+- [ ] curves
+- [ ] subdivision surfaces
+- [ ] managing rounding error
