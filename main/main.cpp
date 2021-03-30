@@ -1,7 +1,7 @@
 #include <iostream>
-#include "../core/geometry.h"
-#include "../core/transform.h"
-#include "../shape/sphere.h"
+#include "geometry.h"
+#include "transform.h"
+#include "sphere.h"
 
 using namespace sr;
 

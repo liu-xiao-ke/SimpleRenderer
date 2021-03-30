@@ -5,7 +5,7 @@
 #ifndef SIMPLERENDERER_SPHERE_H
 #define SIMPLERENDERER_SPHERE_H
 
-#include "../core/shape.h"
+#include "shape.h"
 
 namespace sr{
     class Sphere : public Shape {
