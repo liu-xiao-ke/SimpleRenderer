@@ -1,8 +1,8 @@
 //
 // Created by 18310 on 2021/3/23.
 //
-#include "shape.h"
-#include "interaction.h"
+#include "../include/shape.h"
+#include "../include/interaction.h"
 
 namespace sr{
 

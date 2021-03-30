@@ -1,8 +1,8 @@
 //
 // Created by 18310 on 2021/3/14.
 //
-#include "transform.h"
-#include "interaction.h"
+#include "../include/transform.h"
+#include "../include/interaction.h"
 
 namespace sr{
     Matrix4x4::Matrix4x4(Float _m[4][4]) {

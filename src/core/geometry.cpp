@@ -2,7 +2,7 @@
 // Created by 18310 on 2021/3/9.
 //
 
-#include "geometry.h"
+#include "../include/geometry.h"
 namespace sr {
     template<typename T>
     bool Bounds3<T>::IntersectP(const Ray &ray, Float *hitt0, Float *hitt1) const {
