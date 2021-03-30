@@ -12,4 +12,14 @@ namespace sr {
         }
         return Bounds3f(pMin, pMax);
     }
+
+    bool Sphere::Intersect(const Ray &ray, Float *tHit, SurfaceInteraction *isect, bool testAlphaTexture) const {
+        return false;
+    }
+
+    Float Sphere::Area() const {
+        return 0;
+    }
+
+
 }

@@ -20,6 +20,10 @@ namespace sr{
                                                        thetaMax(std::acos(Clamp(zMax / radius, -1, 1))) {}
         Bounds3f ObjectBound() const override;
 
+        bool Intersect(const Ray &ray, Float *tHit, SurfaceInteraction *isect, bool testAlphaTexture = true) const override;
+
+        Float Area() const override;
+
     private:
         const Float radius;
         const Float zMin, zMax;
