@@ -1,14 +1,13 @@
 //
 // Created by 18310 on 2021/3/23.
 //
-#include "../include/shape.h"
-#include "../include/interaction.h"
+#include "shape.h"
+#include "interaction.h"
 
 namespace sr{
 
     Bounds3f Shape::WorldBound() const {
-        const Transform& M = *ObjectToWorld;
-        return M(ObjectBound());
+        return (*ObjectToWorld)(ObjectBound());
     }
 
     bool Shape::IntersectP(const Ray &ray, bool testAlphaTexture) {

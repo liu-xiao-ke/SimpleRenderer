@@ -28,7 +28,6 @@ namespace sr{
 
     class Transform{
     public:
-        Transform();
         Transform(const Float[4][4]);
         Transform(const Matrix4x4 _m):m(_m), mInv(Inverse(m)){}
         Transform(const Matrix4x4& m, const Matrix4x4& minv):m(m), mInv(minv){}
@@ -47,6 +46,8 @@ namespace sr{
 
         inline Ray operator()(const Ray& r) const;
 
+        //template function's definition and declaration must be inside one .h file
+        //or leads to linking error!
         template<typename T>
         Bounds3<T> operator()(const Bounds3<T>& b) const;
 
@@ -101,7 +102,20 @@ namespace sr{
 
     //todo
     Ray Transform::operator()(const Ray &r) const {
+        return r;
+    }
 
+    template<typename T>
+    Bounds3<T> Transform::operator()(const Bounds3<T> &b) const {
+        constexpr int corners = (1 << 3);
+        const Transform &M = *this;
+        Point3<T> pMin = M(b.pMin), pMax = M(b.pMax);
+        for (size_t i = 0; i < corners; ++i) {
+            auto temp_point = M(b.Corner(i));
+            pMin = Min(pMin, temp_point);
+            pMax = Max(pMax, temp_point);
+        }
+        return Bounds3f(pMin, pMax);
     }
 
 

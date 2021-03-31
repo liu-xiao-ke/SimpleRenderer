@@ -1,8 +1,8 @@
 //
 // Created by 18310 on 2021/3/14.
 //
-#include "../include/transform.h"
-#include "../include/interaction.h"
+#include "transform.h"
+#include "interaction.h"
 
 namespace sr{
     Matrix4x4::Matrix4x4(Float _m[4][4]) {
@@ -260,18 +260,8 @@ namespace sr{
 
     }
 
-    template<typename T>
-    Bounds3<T> Transform::operator()(const Bounds3<T> &b) const {
-        constexpr int corners = (1 << 3);
-        const Transform &M = *this;
-        Point3<T> pMin = M(b.pMin), pMax = M(b.pMax);
-        for (size_t i = 0; i < corners; ++i) {
-            auto temp_point = M(b.Corner(i));
-            pMin = Min(pMin, temp_point);
-            pMax = Max(pMax, temp_point);
-        }
-        return Bounds3<T>(pMin, pMax);
-    }
+
+
 
     SurfaceInteraction Transform::operator()(const SurfaceInteraction &si) const {
         SurfaceInteraction res;

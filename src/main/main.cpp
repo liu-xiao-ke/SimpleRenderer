@@ -11,6 +11,6 @@ int main() {
     Matrix4x4 m(f);
     Transform trans(m);
     Sphere s(&trans, &trans, false, 1, -1, 1, 270);
-    std::cout << s.ObjectBound();
+    std::cout << "1" << s.ObjectBound();
     return 0;
 }

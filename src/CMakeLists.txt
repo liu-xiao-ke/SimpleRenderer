@@ -4,6 +4,7 @@ add_library(SR_CORE SHARED
         core/shape.cpp
         core/medium.cpp
         core/transform.cpp
+        shape/sphere.cpp
         )
 
 add_subdirectory(main)
