@@ -5,8 +5,12 @@
 #include "interaction.h"
 
 namespace sr{
-    Matrix4x4::Matrix4x4(Float _m[4][4]) {
-        std::memcpy(m, _m, 4 * 4 * sizeof(Float));
+    Matrix4x4::Matrix4x4() {
+        m[0][0] = m[1][1] = m[2][2] = m[3][3] = 1;
+        m[0][1] = m[0][2] = m[0][3] = m[1][0] = m[1][2] = m[1][3] = m[2][0] = m[2][1] = m[2][3] = m[3][0] = m[3][1] = m[3][2] = 0;
+    }
+    Matrix4x4::Matrix4x4(const Float _m[4][4]) {
+        memcpy(m, _m, 4 * 4 * sizeof(Float));
     }
 
     Matrix4x4::Matrix4x4(Float t00, Float t01, Float t02, Float t03, Float t10, Float t11, Float t12, Float t13,

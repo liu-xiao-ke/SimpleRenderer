@@ -10,3 +10,4 @@ add_library(SR_CORE SHARED
 add_subdirectory(main)
 
 target_include_directories(SR_CORE PUBLIC ${PROJECT_SOURCE_DIR}/include)
+
