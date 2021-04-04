@@ -600,13 +600,13 @@ namespace sr {
 
     template<typename T>
     inline std::ostream &operator<<(std::ostream &out, const Point2<T> &p) {
-        out << "[ " << p.x << ", " << p.y << " ]";
+        out << "[" << p.x << ", " << p.y << "]";
         return out;
     }
 
     template<typename T>
     inline std::ostream &operator<<(std::ostream &out, const Point3<T> &p) {
-        out << "[ " << p.x << ", " << p.y << ", " << p.z << " ]";
+        out << "[" << p.x << ", " << p.y << ", " << p.z << "]";
         return out;
     }
 
@@ -974,13 +974,13 @@ namespace sr {
 
     template<typename T>
     inline std::ostream &operator<<(std::ostream &out, const Bounds2<T> &b) {
-        out << b.pMin << "," << b.pMax;
+        out << b.pMin << ", " << b.pMax;
         return out;
     }
 
     template<typename T>
     inline std::ostream &operator<<(std::ostream &out, const Bounds3<T> &b) {
-        out << b.pMin << "," << b.pMax;
+        out << b.pMin << ", " << b.pMax;
         return out;
     }
 

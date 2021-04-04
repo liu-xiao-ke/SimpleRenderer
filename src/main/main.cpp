@@ -11,7 +11,7 @@ int main() {
     Matrix4x4 m(f);
     Transform trans(m);
 
-    Sphere s(&trans, &trans, false, 1, -1, 1, 270);
+    Sphere s(&trans, &trans, false, 1, -1, 1, 135);
     std::cout << s.ObjectBound();
     return 0;
 }
