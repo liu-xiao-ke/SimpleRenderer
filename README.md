@@ -36,3 +36,12 @@ A simple renderer based on pbrt design.
 - [ ] curves
 - [ ] subdivision surfaces
 - [ ] managing rounding error
+
+
+
+## Chapter4: Primitives and Intersection Acceleration
+
+
+
+## Chapter5: Color and Radiometry
+
