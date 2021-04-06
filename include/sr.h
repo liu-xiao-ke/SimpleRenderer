@@ -77,6 +77,15 @@ namespace sr {
 
     class Shape;
 
+    template<int nSpectrumSamples>
+    class CoefficientSpectrum;
+
+    class RGBSpectrum;
+
+
+
+    typedef RGBSpectrum Spectrum;
+
     //functions
     //Lerp of two values
     inline Float Lerp(Float t, Float v1, Float v2) { return (1 - t) * v1 + v2; }
