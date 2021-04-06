@@ -107,9 +107,7 @@ namespace sr {
     //clamp between low and high
     template<typename T, typename U, typename V>
     inline T Clamp(T val, U lo, V hi){
-        if(val < lo) return lo;
-        else if(val > hi) return hi;
-        else return val;
+        return val < lo ? lo : (val > hi ? hi : val);
     }
 
 }
