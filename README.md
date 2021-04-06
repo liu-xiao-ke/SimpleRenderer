@@ -45,3 +45,6 @@ A simple renderer based on pbrt design.
 
 ## Chapter5: Color and Radiometry
 
+- [x] Sepctral Representation
+- [ ] The SampledSpectrum class
+- [ ] RGBSpectrum class

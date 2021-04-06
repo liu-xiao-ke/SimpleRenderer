@@ -191,7 +191,7 @@ namespace sr {
     };
 
     class SampledSpectrum : public CoefficientSpectrum<nSpectralSamples> {
-    
+        
     };
 
     class RGBSpectrum : public CoefficientSpectrum<3> {
