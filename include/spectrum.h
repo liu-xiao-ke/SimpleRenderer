@@ -6,13 +6,21 @@
 #define SIMPLERENDERER_SPECTRUM_H
 
 #include "sr.h"
+#include <vector>
 
 namespace sr {
+
     //Spectrum utility declarations:
+    //Wavelength lambda from 400 to 700 is the range where human visual system is most sensitive
     static const int sampledLambdaStart = 400;
     static const int sampledLambdaEnd = 700;
     static const int nSpectralSamples = 60;
 
+    extern bool SpectrumSamplesSorted(const Float *lambda, const Float *v, int n);
+
+    extern void SortSpectrumSamples(Float *lambda, Float *v, int n);
+
+    extern Float AverageSpectrumSamples(const Float *lambda, const Float *v, int n, Float lambdaStart, Float lambdaEnd);
 
     template<int nSpectrumSamples>
     class CoefficientSpectrum {
@@ -190,8 +198,27 @@ namespace sr {
         Float c[nSpectrumSamples];
     };
 
+
     class SampledSpectrum : public CoefficientSpectrum<nSpectralSamples> {
-        
+        SampledSpectrum(Float v = 0.f) : CoefficientSpectrum<nSpectralSamples>(v) {}
+
+        static SampledSpectrum FromSampled(const Float *lambda, const Float *v, int n) {
+            //Sort samples if unordered, use sorted for returnd Spectrum
+            if (!SpectrumSamplesSorted(lambda, v, n)) {
+                std::vector<Float> tlambda(&lambda[0], &lambda[n]);
+                std::vector<Float> tv(&v[0], &v[n]);
+                SortSpectrumSamples(&tlambda[0], &tv[0], n);
+                return FromSampled(&tlambda[0], &tv[0], n);
+            }
+            SampledSpectrum r;
+            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+                //compute the average value of given SPD over ith sample's range
+                Float lambda0 = Lerp(Float(i) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
+                Float lambda1 = Lerp(Float(i + 1) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
+                r.c[i] = AverageSpectrumSamples(lambda, v, n, lambda0, lambda1);
+            }
+            return r;
+        }
     };
 
     class RGBSpectrum : public CoefficientSpectrum<3> {
@@ -249,7 +276,6 @@ namespace sr {
         assert(!res.HasNans());
         return res;
     }
-
 
     template<int n>
     inline CoefficientSpectrum<n> Lerp(Float t, const CoefficientSpectrum<n> &cs1, const CoefficientSpectrum<n> &cs2) {

@@ -5,7 +5,7 @@ add_library(SR_CORE SHARED
         core/medium.cpp
         core/transform.cpp
         shape/sphere.cpp
-        ../include/spectrum.h)
+        core/spectrum.cpp)
 
 add_subdirectory(main)
 
