@@ -18,7 +18,7 @@ namespace sr {
     SampledSpectrum SampledSpectrum::rgbRefl2SpectRed;
     SampledSpectrum SampledSpectrum::rgbRefl2SpectGreen;
     SampledSpectrum SampledSpectrum::rgbRefl2SpectBlue;
-    SampledSpectrum SampledSpectrum::rbgIllum2SpectWhite;
+    SampledSpectrum SampledSpectrum::rgbIllum2SpectWhite;
     SampledSpectrum SampledSpectrum::rgbIllum2SpectCyan;
     SampledSpectrum SampledSpectrum::rgbIllum2SpectMagenta;
     SampledSpectrum SampledSpectrum::rgbIllum2SpectYellow;
@@ -640,7 +640,7 @@ namespace sr {
             rgbRefl2SpectBlue.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBRefl2SpectBlue, nRGB2SpectSamples,
                                                             lambda0, lambda1);
 
-            rbgIllum2SpectWhite.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBIllum2SpectWhite, nRGB2SpectSamples,
+            rgbIllum2SpectWhite.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBIllum2SpectWhite, nRGB2SpectSamples,
                                                               lambda0, lambda1);
             rgbIllum2SpectCyan.c[i] = AverageSpectrumSamples(RGB2SpectLambda, RGBIllum2SpectCyan, nRGB2SpectSamples,
                                                              lambda0, lambda1);
@@ -666,11 +666,79 @@ namespace sr {
     SampledSpectrum SampledSpectrum::FromRGB(const Float *rgb, SpectrumType type) {
         SampledSpectrum r;
         if (type == SpectrumType::Illuminant) {
-
-        } else {
-
+            if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]){
+                r += rgb[0] * rgbIllum2SpectWhite;
+                if (rgb[1] <= rgb[2]){
+                    r += (rgb[1] - rgb[0]) * rgbIllum2SpectCyan;
+                    r += (rgb[2] - rgb[1]) * rgbIllum2SpectBlue;
+                } else{
+                    r += (rgb[2] - rgb[0]) * rgbIllum2SpectCyan;
+                    r += (rgb[1] - rgb[2]) * rgbIllum2SpectGreen;
+                }
+            } else if(rgb[1] <= rgb[0] && rgb[1] <= rgb[2]){
+                r += rgb[1] * rgbIllum2SpectWhite;
+                if (rgb[0] <= rgb[2]){
+                    r += (rgb[0] - rgb[1]) * rgbIllum2SpectMagenta;
+                    r += (rgb[2] - rgb[0]) * rgbIllum2SpectBlue;
+                } else{
+                    r += (rgb[2] - rgb[1]) * rgbIllum2SpectMagenta;
+                    r += (rgb[0] - rgb[2]) * rgbIllum2SpectRed;
+                }
+            } else{
+                r += rgb[2] * rgbIllum2SpectWhite;
+                if (rgb[0] <= rgb[1]){
+                    r += (rgb[0] - rgb[2]) * rgbIllum2SpectYellow;
+                    r += (rgb[1] - rgb[0]) * rgbIllum2SpectGreen;
+                } else{
+                    r += (rgb[1] - rgb[2]) * rgbIllum2SpectYellow;
+                    r += (rgb[0] - rgb[1]) * rgbIllum2SpectRed;
+                }
+            }
+            r *= 0.94;
+        } else{
+            if (rgb[0] <= rgb[1] && rgb[0] <= rgb[2]){
+                r += rgb[0] * rgbRefl2SpectWhite;
+                if (rgb[1] <= rgb[2]){
+                    r += (rgb[1] - rgb[0]) * rgbRefl2SpectCyan;
+                    r += (rgb[2] - rgb[1]) * rgbRefl2SpectBlue;
+                } else{
+                    r += (rgb[2] - rgb[0]) * rgbRefl2SpectCyan;
+                    r += (rgb[1] - rgb[2]) * rgbRefl2SpectGreen;
+                }
+            } else if(rgb[1] <= rgb[0] && rgb[1] <= rgb[2]){
+                r += rgb[1] * rgbRefl2SpectWhite;
+                if (rgb[0] <= rgb[2]){
+                    r += (rgb[0] - rgb[1]) * rgbRefl2SpectMagenta;
+                    r += (rgb[2] - rgb[0]) * rgbRefl2SpectBlue;
+                } else{
+                    r += (rgb[2] - rgb[1]) * rgbRefl2SpectMagenta;
+                    r += (rgb[0] - rgb[2]) * rgbRefl2SpectRed;
+                }
+            } else{
+                r += rgb[2] * rgbIllum2SpectWhite;
+                if (rgb[0] <= rgb[1]){
+                    r += (rgb[0] - rgb[2]) * rgbRefl2SpectYellow;
+                    r += (rgb[1] - rgb[0]) * rgbRefl2SpectGreen;
+                } else{
+                    r += (rgb[1] - rgb[2]) * rgbRefl2SpectYellow;
+                    r += (rgb[0] - rgb[1]) * rgbRefl2SpectRed;
+                }
+            }
+            r *= 0.8644f;
         }
         return r.Clamp();
+    }
+
+    SampledSpectrum SampledSpectrum::FromXYZ(const Float *xyz, SpectrumType type) {
+        Float rgb[3];
+        XYZToRGB(xyz, rgb);
+        return FromRGB(rgb, type);
+    }
+
+    SampledSpectrum::SampledSpectrum(const RGBSpectrum &r, SpectrumType type) {
+        Float rgb[3];
+        r.ToRGB(rgb);
+        *this = FromRGB(rgb, type);
     }
 
 }

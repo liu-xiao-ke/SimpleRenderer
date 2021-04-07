@@ -288,6 +288,7 @@ namespace sr {
     public:
         SampledSpectrum(Float v = 0.f) : CoefficientSpectrum<nSpectralSamples>(v) {}
         SampledSpectrum(const CoefficientSpectrum<nSpectralSamples>& v): CoefficientSpectrum<nSpectralSamples>(v){}
+        SampledSpectrum(const RGBSpectrum& r, SpectrumType type = SpectrumType::Illuminant);
         static SampledSpectrum FromSampled(const Float *lambda, const Float *v, int n) {
             //Sort samples if unordered, use sorted for returnd Spectrum
             if (!SpectrumSamplesSorted(lambda, v, n)) {
@@ -335,8 +336,8 @@ namespace sr {
             ToXYZ(xyz);
             XYZToRGB(xyz, rgb);
         }
-        SampledSpectrum FromRGB(const Float rgb[3], SpectrumType type);
-
+        static SampledSpectrum FromRGB(const Float rgb[3], SpectrumType type = SpectrumType::Illuminant);
+        static SampledSpectrum FromXYZ(const Float xyz[3], SpectrumType type = SpectrumType::Illuminant);
         RGBSpectrum ToRGBSpectrum() const;
 
     private:
@@ -344,7 +345,7 @@ namespace sr {
         static SampledSpectrum rgbRefl2SpectWhite, rgbRefl2SpectCyan, rgbRefl2SpectMagenta, rgbRefl2SpectYellow;
         static SampledSpectrum rgbRefl2SpectRed, rgbRefl2SpectGreen, rgbRefl2SpectBlue;
 
-        static SampledSpectrum rbgIllum2SpectWhite, rgbIllum2SpectCyan, rgbIllum2SpectMagenta, rgbIllum2SpectYellow;
+        static SampledSpectrum rgbIllum2SpectWhite, rgbIllum2SpectCyan, rgbIllum2SpectMagenta, rgbIllum2SpectYellow;
         static SampledSpectrum rgbIllum2SpectRed, rgbIllum2SpectGreen, rgbIllum2SpectBlue;
     };
 
