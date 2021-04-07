@@ -241,6 +241,7 @@ namespace sr {
             return res;
         }
 
+
     protected:
         Float c[nSpectrumSamples];
     };
@@ -287,57 +288,30 @@ namespace sr {
     class SampledSpectrum : public CoefficientSpectrum<nSpectralSamples> {
     public:
         SampledSpectrum(Float v = 0.f) : CoefficientSpectrum<nSpectralSamples>(v) {}
-        SampledSpectrum(const CoefficientSpectrum<nSpectralSamples>& v): CoefficientSpectrum<nSpectralSamples>(v){}
-        SampledSpectrum(const RGBSpectrum& r, SpectrumType type = SpectrumType::Illuminant);
-        static SampledSpectrum FromSampled(const Float *lambda, const Float *v, int n) {
-            //Sort samples if unordered, use sorted for returnd Spectrum
-            if (!SpectrumSamplesSorted(lambda, v, n)) {
-                std::vector<Float> tlambda(&lambda[0], &lambda[n]);
-                std::vector<Float> tv(&v[0], &v[n]);
-                SortSpectrumSamples(&tlambda[0], &tv[0], n);
-                return FromSampled(&tlambda[0], &tv[0], n);
-            }
-            SampledSpectrum r;
-            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
-                //compute the average value of given SPD over ith sample's range
-                Float lambda0 = Lerp(Float(i) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
-                Float lambda1 = Lerp(Float(i + 1) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
-                r.c[i] = AverageSpectrumSamples(lambda, v, n, lambda0, lambda1);
-            }
-            return r;
-        }
 
+        SampledSpectrum(const CoefficientSpectrum<nSpectralSamples> &v) : CoefficientSpectrum<nSpectralSamples>(v) {}
+
+        SampledSpectrum(const RGBSpectrum &r, SpectrumType type = SpectrumType::Illuminant);
+
+        static SampledSpectrum FromSampled(const Float *lambda, const Float *v, int n);
+
+        //initialize X, Y, Z, rgb illuminant spectrum and rgb reflectance spectrum
+        //use Spectrum::Init() when using PBRT::Init()
         static void Init();
 
-        void ToXYZ(Float xyz[3]) const {
-            xyz[0] = xyz[1] = xyz[2] = 0.0f;
-            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
-                xyz[0] += X.c[i] * c[i];
-                xyz[1] += Y.c[i] * c[i];
-                xyz[2] += Z.c[i] * c[i];
-            }
-            Float scale = Float(sampledLambdaEnd - sampledLambdaStart) / Float(nSpectralSamples) / CIE_Y_integral;
-            xyz[0] *= scale;
-            xyz[1] *= scale;
-            xyz[2] *= scale;
-        }
+        //From X, Y, Z spectrum to xyz coefficient
+        void ToXYZ(Float xyz[3]) const;
 
         //y coefficient is closly related to luminance, which measures the perceived brightness of a color
-        Float y() const {
-            Float _y = 0.f;
-            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
-                _y += Y.c[i] * c[i];
-            }
-            return _y * Float(sampledLambdaEnd - sampledLambdaStart) / Float(nSpectralSamples) / CIE_Y_integral;
-        }
+        Float y() const;
 
-        void ToRGB(Float rgb[3]) const {
-            Float xyz[3];
-            ToXYZ(xyz);
-            XYZToRGB(xyz, rgb);
-        }
+        //from xyz to rgb
+        void ToRGB(Float rgb[3]) const;
+
         static SampledSpectrum FromRGB(const Float rgb[3], SpectrumType type = SpectrumType::Illuminant);
+
         static SampledSpectrum FromXYZ(const Float xyz[3], SpectrumType type = SpectrumType::Illuminant);
+
         RGBSpectrum ToRGBSpectrum() const;
 
     private:
@@ -356,23 +330,21 @@ namespace sr {
 
         RGBSpectrum(CoefficientSpectrum<3> &v) : CoefficientSpectrum<3>(v) {}
 
-        static RGBSpectrum FromRGB(const Float rgb[3]) {
-            RGBSpectrum s;
-            s.c[0] = rgb[0];
-            s.c[1] = rgb[1];
-            s.c[2] = rgb[2];
-            return s;
-        }
+        static RGBSpectrum FromRGB(const Float rgb[3], SpectrumType type = SpectrumType::Reflectance);
 
-        void ToRGB(Float *rgb) const {
-            rgb[0] = c[0];
-            rgb[1] = c[1];
-            rgb[2] = c[2];
-        }
+        static RGBSpectrum FromXYZ(const Float xyz[3], SpectrumType type = SpectrumType::Reflectance);
 
-        const RGBSpectrum &ToRGBSpectrum() const {
-            return *this;
-        }
+        void ToRGB(Float *rgb) const;
+
+        void ToXYZ(Float xyz[3]) const { RGBToXYZ(c, xyz); }
+
+        Float y() const;
+
+        //return can only be assigned to const Spectrum
+        const RGBSpectrum &ToRGBSpectrum() const { return *this; }
+
+        static RGBSpectrum FromSampled(const Float *lambda, const Float *v, int n);
+
     };
 
 }

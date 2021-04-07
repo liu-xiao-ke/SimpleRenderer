@@ -657,11 +657,7 @@ namespace sr {
         }
     }
 
-    RGBSpectrum SampledSpectrum::ToRGBSpectrum() const {
-        Float rgb[3];
-        ToRGB(rgb);
-        return RGBSpectrum::FromRGB(rgb);
-    }
+
 
     SampledSpectrum SampledSpectrum::FromRGB(const Float *rgb, SpectrumType type) {
         SampledSpectrum r;
@@ -729,16 +725,106 @@ namespace sr {
         return r.Clamp();
     }
 
+    SampledSpectrum SampledSpectrum::FromSampled(const Float *lambda, const Float *v, int n) {
+        //Sort samples if unordered, use sorted for returnd Spectrum
+        if (!SpectrumSamplesSorted(lambda, v, n)) {
+            std::vector<Float> tlambda(&lambda[0], &lambda[n]);
+            std::vector<Float> tv(&v[0], &v[n]);
+            SortSpectrumSamples(&tlambda[0], &tv[0], n);
+            return FromSampled(&tlambda[0], &tv[0], n);
+        }
+        SampledSpectrum r;
+        for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+            //compute the average value of given SPD over ith sample's range
+            Float lambda0 = Lerp(Float(i) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
+            Float lambda1 = Lerp(Float(i + 1) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
+            r.c[i] = AverageSpectrumSamples(lambda, v, n, lambda0, lambda1);
+        }
+        return r;
+    }
+
+
     SampledSpectrum SampledSpectrum::FromXYZ(const Float *xyz, SpectrumType type) {
         Float rgb[3];
         XYZToRGB(xyz, rgb);
         return FromRGB(rgb, type);
     }
 
+    void SampledSpectrum::ToXYZ(Float *xyz) const {
+        xyz[0] = xyz[1] = xyz[2] = 0.0f;
+        for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+            xyz[0] += X.c[i] * c[i];
+            xyz[1] += Y.c[i] * c[i];
+            xyz[2] += Z.c[i] * c[i];
+        }
+        Float scale = Float(sampledLambdaEnd - sampledLambdaStart) / Float(nSpectralSamples) / CIE_Y_integral;
+        xyz[0] *= scale;
+        xyz[1] *= scale;
+        xyz[2] *= scale;
+    }
+
+    Float SampledSpectrum::y() const {
+        Float _y = 0.f;
+        for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+            _y += Y.c[i] * c[i];
+        }
+        return _y * Float(sampledLambdaEnd - sampledLambdaStart) / Float(nSpectralSamples) / CIE_Y_integral;
+    }
+
+    void SampledSpectrum::ToRGB(Float *rgb) const {
+        Float xyz[3];
+        ToXYZ(xyz);
+        XYZToRGB(xyz, rgb);
+    }
+
     SampledSpectrum::SampledSpectrum(const RGBSpectrum &r, SpectrumType type) {
         Float rgb[3];
         r.ToRGB(rgb);
         *this = FromRGB(rgb, type);
+    }
+
+    RGBSpectrum SampledSpectrum::ToRGBSpectrum() const {
+        Float rgb[3];
+        ToRGB(rgb);
+        return RGBSpectrum::FromRGB(rgb);
+    }
+
+
+    RGBSpectrum RGBSpectrum::FromRGB(const Float *rgb, SpectrumType type) {
+        RGBSpectrum s;
+        s.c[0] = rgb[0];
+        s.c[1] = rgb[1];
+        s.c[2] = rgb[2];
+        assert(!s.HasNans());
+        return s;
+    }
+
+    RGBSpectrum RGBSpectrum::FromXYZ(const Float *xyz, SpectrumType type) {
+        RGBSpectrum s;
+        XYZToRGB(xyz, s.c);
+        return s;
+    }
+
+    void RGBSpectrum::ToRGB(Float *rgb) const {
+        rgb[0] = c[0];
+        rgb[1] = c[1];
+        rgb[2] = c[2];
+    }
+
+    Float RGBSpectrum::y() const {
+        const Float YWeight[3] = {0.212671f, 0.715160f, 0.072169f};
+        return YWeight[0] * c[0] + YWeight[1] * c[1] + YWeight[2] * c[2];
+    }
+
+    RGBSpectrum RGBSpectrum::FromSampled(const Float *lambda, const Float *v, int n) {
+        if(!SpectrumSamplesSorted(lambda, v, n)){
+            std::vector<Float> tlambda(&lambda[0], &lambda[n]);
+            std::vector<Float> tv(&v[0], &v[n]);
+            SortSpectrumSamples(&tlambda[0], &tv[0], n);
+            return FromSampled(&tlambda[0], &tv[0], n);
+        }
+
+
     }
 
 }
