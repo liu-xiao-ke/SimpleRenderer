@@ -16,6 +16,14 @@ namespace sr {
     static const int sampledLambdaEnd = 700;
     static const int nSpectralSamples = 60;
 
+    //CIE standard: samples from 360nm to 830nm, 1nm as interval.
+    static const int nCIESamples = 471;
+    extern const Float CIE_X[nCIESamples];
+    extern const Float CIE_Y[nCIESamples];
+    extern const Float CIE_Z[nCIESamples];
+    extern const Float CIE_lambda[nCIESamples];
+    static const Float CIE_Y_integral = 106.856895;
+
     extern bool SpectrumSamplesSorted(const Float *lambda, const Float *v, int n);
 
     extern void SortSpectrumSamples(Float *lambda, Float *v, int n);
@@ -200,6 +208,7 @@ namespace sr {
 
 
     class SampledSpectrum : public CoefficientSpectrum<nSpectralSamples> {
+    public:
         SampledSpectrum(Float v = 0.f) : CoefficientSpectrum<nSpectralSamples>(v) {}
 
         static SampledSpectrum FromSampled(const Float *lambda, const Float *v, int n) {
@@ -219,6 +228,42 @@ namespace sr {
             }
             return r;
         }
+
+        static void Init() {
+            //compute XYZ matching functions for SampledSpectrum
+            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+                Float lambda0 = Lerp(Float(i) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
+                Float lambda1 = Lerp(Float(i + 1) / Float(nSpectralSamples), sampledLambdaStart, sampledLambdaEnd);
+                X.c[i] = AverageSpectrumSamples(CIE_lambda, CIE_X, nCIESamples, lambda0, lambda1);
+                Y.c[i] = AverageSpectrumSamples(CIE_lambda, CIE_Y, nCIESamples, lambda0, lambda1);
+                Z.c[i] = AverageSpectrumSamples(CIE_lambda, CIE_Z, nCIESamples, lambda0, lambda1);
+            }
+        }
+
+        void ToXYZ(Float xyz[3]) const {
+            xyz[0] = xyz[1] = xyz[2] = 0.0f;
+            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+                xyz[0] += X.c[i] * c[i];
+                xyz[1] += Y.c[i] * c[i];
+                xyz[2] += Z.c[i] * c[i];
+            }
+            Float scale = Float(sampledLambdaEnd - sampledLambdaStart) / Float(nSpectralSamples) / CIE_Y_integral;
+            xyz[0] *= scale;
+            xyz[1] *= scale;
+            xyz[2] *= scale;
+        }
+
+        //y coefficient is closly related to luminance, which measures the perceived brightness of a color
+        Float y() const {
+            Float _y = 0.f;
+            for (std::size_t i = 0; i < nSpectralSamples; ++i) {
+                _y += Y.c[i] * c[i];
+            }
+            return _y * Float(sampledLambdaEnd - sampledLambdaStart) / Float(nSpectralSamples) / CIE_Y_integral;
+        }
+
+    private:
+        static SampledSpectrum X, Y, Z;
     };
 
     class RGBSpectrum : public CoefficientSpectrum<3> {
