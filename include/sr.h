@@ -110,15 +110,37 @@ namespace sr {
 
     //degree2radians
     inline Float Radians(Float degree) { return (degree / 180) * Pi; }
+
     //radians2degree
-    inline Float Degrees(Float radian){ return radian * InvPi * 180; }
+    inline Float Degrees(Float radian) { return radian * InvPi * 180; }
 
     //clamp between low and high
     template<typename T, typename U, typename V>
-    inline T Clamp(T val, U lo, V hi){
+    inline T Clamp(T val, U lo, V hi) {
         return val < lo ? lo : (val > hi ? hi : val);
     }
 
+    //log2(x) function
+    inline Float Log2(Float x) {
+        const Float invLog2 = 1.442695040888963387004650940071;
+        return std::log(x) * invLog2;
+    }
+
+    template<typename Predicate>
+    inline int FindInterval(int size, const Predicate &pred) {
+        int first = 0, len = size;
+        while (len > 0){
+            int half = len >> 1, mid = first + half;
+            if (pred(mid)){
+                first = mid + 1;
+                len -= half + 1;
+            } else{
+                len = half;
+            }
+        }
+        //max is size-2 for interpolate
+        return Clamp(first - 1, 0, size - 2);
+    }
 }
 
 #endif //SIMPLERENDERER_SR_H

@@ -30,6 +30,7 @@ namespace sr {
 
     extern Float AverageSpectrumSamples(const Float *lambda, const Float *v, int n, Float lambdaStart, Float lambdaEnd);
 
+    extern Float InterpolateSpectrumSamples(const Float *lambda, const Float *v, int n, Float l);
 
     //samples' wavelengths and lambda
     static const int nRGB2SpectSamples = 32;
