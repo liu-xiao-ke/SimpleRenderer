@@ -825,15 +825,17 @@ namespace sr {
         }
 
         //get xyz coefficients
-        Float xyz[3] = {0.f, 0.f, 0.f};
-        for (int i = 0; i < nCIESamples; ++i) {
+        Float xyz[3] = {0.0f, 0.0f, 0.0f};
+        for (std::size_t i = 0; i < nCIESamples; ++i) {
             Float val = InterpolateSpectrumSamples(lambda, v, n, CIE_lambda[i]);
 
             xyz[0] += val * CIE_X[i];
             xyz[1] += val * CIE_Y[i];
-            xyz[2] += val * CIE_Y[i];
+            xyz[2] += val * CIE_Z[i];
         }
-        Float scale = Float(CIE_lambda[nCIESamples - 1] - CIE_lambda[0]) / Float(CIE_Y_integral * nCIESamples);
+
+        Float scale = Float(CIE_lambda[nCIESamples - 1] - CIE_lambda[0]) / Float(nCIESamples * CIE_Y_integral);
+
         xyz[0] *= scale;
         xyz[1] *= scale;
         xyz[2] *= scale;
@@ -846,7 +848,7 @@ namespace sr {
         if (l <= lambda[0]) return v[0];
         if (l >= lambda[n - 1]) return v[n - 1];
 
-        int offset = FindInterval(n, [&](int index) { return lambda[index] <= l; });
+        int offset = FindInterval(n, [&](int index){ return lambda[index] <= l; });
         Float t = (lambda[offset] - l) / (lambda[offset + 1] - lambda[offset]);
         return Lerp(t, v[offset], v[offset + 1]);
     }
