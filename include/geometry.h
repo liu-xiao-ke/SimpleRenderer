@@ -336,10 +336,12 @@ namespace sr {
     }
 
     template<typename T>
-    inline std::ostream &operator<<(std::ostream &out, Vector3<T> &v) {
-        out << "[ " << v.x << ", " << v.y << ", " << v.z << " ]";
+    inline std::ostream &operator<<(std::ostream &out, const Vector3<T> &v) {
+        out << "[" << v.x << ", " << v.y << ", " << v.z << "]";
         return out;
     }
+
+
 
 /***********************************************Vector:typedef*********************************************************/
 
