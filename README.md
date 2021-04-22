@@ -48,3 +48,4 @@ A simple renderer based on pbrt design.
 - [x] Sepctral Representation
 - [x] The SampledSpectrum class
 - [x] RGBSpectrum class
+- [x] Radiometry
