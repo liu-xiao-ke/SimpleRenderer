@@ -264,7 +264,7 @@ namespace sr {
 
 /***************************************************Vector3 functions**************************************************/
     template<typename T>
-    inline Vector3<T> operator*(const T s, Vector3<T> &v) {
+    inline Vector3<T> operator*(const T s, const Vector3<T> &v) {
         return v * s;
     }
 
@@ -1178,7 +1178,18 @@ namespace sr {
         return Vector3f(sinTheta * std::cos(phi), sinTheta * std::sin(phi), cosTheta);
     }
 
-    
+    inline Vector3f SphericalDirection(Float sinTheta, Float cosTheta, Float phi, const Vector3f& x, const Vector3f& y, const Vector3f& z){
+        return sinTheta * std::cos(phi) * x + sinTheta * std::sin(phi) * y + cosTheta * z;
+    }
+
+    inline Float SphericalTheta(const Vector3f& v){
+        return std::acos(Clamp(v.z, -1, 1));
+    }
+
+    inline Float SphericalPhi(const Vector3f& v){
+        Float p = std::atan2(v.y, v.x);
+        return p < 0 ? (p + Pi * 2) : p;
+    }
 }
 
 
