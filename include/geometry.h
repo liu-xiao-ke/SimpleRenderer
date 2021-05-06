@@ -965,7 +965,7 @@ namespace sr {
     };
 
 
-    /******************************************************typedef*********************************************************/
+/******************************************************typedef*********************************************************/
 
     typedef Bounds2<int> Bounds2i;
     typedef Bounds2<Float> Bounds2f;
@@ -1171,5 +1171,15 @@ namespace sr {
         }
         return Bounds3iIterator(b, pEnd);
     }
+
+/****************************************************geometry inline functions*****************************************/
+
+    inline Vector3f SphericalDirection(Float sinTheta, Float cosTheta, Float phi){
+        return Vector3f(sinTheta * std::cos(phi), sinTheta * std::sin(phi), cosTheta);
+    }
+
+    
 }
+
+
 #endif //SIMPLERENDERER_GEOMETRY_H

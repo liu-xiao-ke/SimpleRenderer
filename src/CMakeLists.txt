@@ -1,4 +1,4 @@
-add_library(SR_CORE SHARED
+add_library(sr SHARED
         core/geometry.cpp
         core/interaction.cpp
         core/shape.cpp
@@ -9,5 +9,5 @@ add_library(SR_CORE SHARED
 
 add_subdirectory(main)
 
-target_include_directories(SR_CORE PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(sr PUBLIC ${PROJECT_SOURCE_DIR}/include)
 

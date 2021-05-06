@@ -1,8 +1,7 @@
 #include <iostream>
 #include "geometry.h"
 #include "transform.h"
-#include "sphere.h"
-#include "spectrum.h"
+
 
 using namespace sr;
 
